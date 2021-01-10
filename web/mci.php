@@ -24,7 +24,7 @@
     			'http://ip-api.com/json/%s?%s',
     			$_GET['ip'],
     			http_build_query(array(
-    				'fields' => 17433,
+    				'fields' => 16921,
     				'lang' => 'ru'
     				)
     			)

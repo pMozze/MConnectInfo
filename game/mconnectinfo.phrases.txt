@@ -1,0 +1,74 @@
+"Phrases"
+{
+	"Top message"
+	{
+		"ru"	"▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+	}
+
+	"Bottom message"
+	{
+		"ru"	"▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
+	}
+
+	"NickName"
+	{
+		"#format"	"{1:N}"
+		"ru"	"► Зашел: {1}"
+	}
+
+	"Location"
+	{
+		"#format"	"{1:s},{2:s},{3:s}"
+		"ru"	"► Из: {1}, {2}, {3}"
+	}
+
+	"Provider"
+	{
+		"#format"	"{1:s}"
+		"ru"	"► Провайдер: {1}"
+	}
+
+	"IP"
+	{
+		"#format"	"{1:s}"
+		"ru"	"► IP: {1}"
+	}
+
+	"SteamID"
+	{
+		"#format"	"{1:s}"
+		"ru"	"► SteamID: {1}"
+	}
+
+	"Licensed"
+	{
+		"ru"	"[Steam]"
+	}
+
+	"Not licensed"
+	{
+		"ru"	"[Пиратка]"
+	}
+
+	"Name"
+	{
+		"#format"	"{1:s}"
+		"ru"	"► Имя: {1}"
+	}
+
+	"Vac ban is exist"
+	{
+		"ru"	"► VAC: Найдена активная VAC блокировка"
+	}
+
+	"Vac ban is not exist"
+	{
+		"ru"	"► VAC: Активных VAC блокировок не найдено"
+	}
+
+	"Disconnect"
+	{
+		"#format"	"{1:N}"
+		"ru"	"► Игрок {1} покинул сервер"
+	}
+}

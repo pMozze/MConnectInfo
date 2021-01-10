@@ -11,10 +11,10 @@ public Plugin myinfo = {
 HTTPClient g_hHTTPClient;
 
 public void OnPluginStart() {
-	g_hHTTPClient = new HTTPClient("");
+	g_hHTTPClient = new HTTPClient("https://headhunter.myarena.site");
 
 	LoadTranslations("mconnectinfo.phrases");
-	HookEvent("player_connect", onPlayerConnect, EventHookMode_Pre);
+	HookEvent("player_connect_client", onPlayerConnect, EventHookMode_Pre);
 	HookEvent("player_disconnect", onPlayerDisconnect, EventHookMode_Pre);
 }
 
@@ -47,7 +47,7 @@ public void OnClientPostAdminCheck(int iClient) {
 	hDataPack.WriteString(szAuth);
 	hDataPack.WriteString(szIP);
 
-	Format(szBuffer, sizeof(szBuffer), "mci.php?steamID=%s&ip=%s", szAuth, szIP);
+	Format(szBuffer, sizeof(szBuffer), "api/mci.php?steamID=%s&ip=%s", szAuth, szIP);
 	g_hHTTPClient.Get(szBuffer, onDataRecived, hDataPack);
 }
 
@@ -71,6 +71,9 @@ public void onDataRecived(HTTPResponse hResponse, DataPack hDataPack) {
 	hDataPack.ReadString(szBuffer[0], 256);
 	hDataPack.ReadString(szBuffer[1], 256);
 	delete hDataPack;
+
+	if (!IsClientInGame(iClient))
+		return;
 
 	if (hResponse.Status != HTTPStatus_OK) {
 		Format(szBuffer[0], 256, "%t", "Connected", iClient);
@@ -106,6 +109,9 @@ public void onDataRecived(HTTPResponse hResponse, DataPack hDataPack) {
 		if (szName[0]) {
 			Format(szBuffer[2], 256, "%t", "Name", szName);
 			PrintToChatAll(szBuffer[2]);
+		} else {
+			Format(szBuffer[2], 256, "%t", "SteamID", szBuffer[0]);
+			PrintToChatAll(szBuffer[2]);
 		}
 		
 		Format(szBuffer[2], 256, "%t", hSteam.GetBool("vac") ? "Vac ban is exist" : "Vac ban is not exist");
@@ -128,7 +134,7 @@ public void onDataRecived(HTTPResponse hResponse, DataPack hDataPack) {
 		hGEO.GetString("country", szCountry, sizeof(szCountry));
 		hGEO.GetString("city", szCity, sizeof(szCity));
 		hGEO.GetString("regionName", szRegion, sizeof(szRegion));
-		hGEO.GetString("org", szProvider, sizeof(szProvider));
+		hGEO.GetString("isp", szProvider, sizeof(szProvider));
 		
 		Format(szBuffer[2], 256, "%t", "Location", szCountry, szCity, szRegion);
 		PrintToChatAll(szBuffer[2]);

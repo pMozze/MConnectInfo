@@ -4,11 +4,12 @@ public Plugin myinfo = {
 	name = "MConnectInfo",
 	author = "Mozze",
 	description = "",
-	version = "1.1",
+	version = "1.2",
 	url = "t.me/pMozze"
 };
 
 HTTPClient g_hHTTPClient;
+bool g_bEnabled;
 
 public void OnPluginStart() {
 	g_hHTTPClient = new HTTPClient("");
@@ -16,6 +17,16 @@ public void OnPluginStart() {
 	LoadTranslations("mconnectinfo.phrases");
 	HookEvent("player_connect_client", onPlayerConnect, EventHookMode_Pre);
 	HookEvent("player_disconnect", onPlayerDisconnect, EventHookMode_Pre);
+}
+
+public void OnMapStart() {
+	g_bEnabled = false;
+	CreateTimer(45.0, onMapChangeTimer);
+}
+
+public Action onMapChangeTimer(Handle hTimer) {
+	g_bEnabled = true;
+	return Plugin_Stop;
 }
 
 public Action onPlayerConnect(Event hEvent, const char[] szName, bool bDontBroadcast) {
@@ -27,7 +38,7 @@ public Action onPlayerDisconnect(Event hEvent, const char[] szName, bool bDontBr
 }
 
 public void OnClientPostAdminCheck(int iClient) {
-	if (IsFakeClient(iClient) || GetUserFlagBits(iClient))
+	if (!g_bEnabled || GetUserFlagBits(iClient) || IsFakeClient(iClient))
 		return;
 
 	DataPack
@@ -47,12 +58,12 @@ public void OnClientPostAdminCheck(int iClient) {
 	hDataPack.WriteString(szAuth);
 	hDataPack.WriteString(szIP);
 
-	Format(szBuffer, sizeof(szBuffer), "api/mci.php?steamID=%s&ip=%s", szAuth, szIP);
+	Format(szBuffer, sizeof(szBuffer), "mci.php?steamID=%s&ip=%s", szAuth, szIP);
 	g_hHTTPClient.Get(szBuffer, onDataRecived, hDataPack);
 }
 
 public void OnClientDisconnect(int iClient) {
-	if (IsFakeClient(iClient) || !IsClientInGame(iClient))
+	if (!IsClientInGame(iClient) || IsFakeClient(iClient))
 		return;
 
 	PrintToChatAll("%t", "Disconnect", iClient);
@@ -76,14 +87,17 @@ public void onDataRecived(HTTPResponse hResponse, DataPack hDataPack) {
 		return;
 
 	if (hResponse.Status != HTTPStatus_OK) {
-		Format(szBuffer[0], 256, "%t", "Connected", iClient);
-		Format(szBuffer[1], 256, "%t", "SteamID", szBuffer[1]);
-		Format(szBuffer[2], 256, "%t", "IP", szBuffer[2]);
-
 		PrintToChatAll("%t", "Top message");
-		PrintToChatAll("%s", szBuffer[0]);
-		PrintToChatAll("%s", szBuffer[1]);
-		PrintToChatAll("%s", szBuffer[2]);
+
+		Format(szBuffer[2], 256, "%t", "NickName", iClient);
+		PrintToChatAll(szBuffer[2]);
+
+		Format(szBuffer[2], 256, "%t", "SteamID", szBuffer[0]);
+		PrintToChatAll(szBuffer[2]);
+
+		Format(szBuffer[2], 256, "%t", "IP", szBuffer[1]);
+		PrintToChatAll(szBuffer[2]);
+		
 		PrintToChatAll("%t", "Bottom message");
 
 		return;
